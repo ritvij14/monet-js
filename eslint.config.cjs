@@ -14,6 +14,7 @@ const compat = new FlatCompat({
 });
 
 module.exports = defineConfig([
+  ...compat.extends("plugin:@typescript-eslint/recommended"),
   {
     languageOptions: {
       globals: {
@@ -32,8 +33,6 @@ module.exports = defineConfig([
     plugins: {
       "@typescript-eslint": typescriptEslint,
     },
-
-    extends: compat.extends("plugin:@typescript-eslint/recommended"),
 
     rules: {
       "no-console": "warn",
