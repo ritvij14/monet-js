@@ -1,3 +1,39 @@
+/**
+ * Regex Parsing Pipeline
+ * =================================
+ * Implements three-stage detection flow:
+ *   1. Currency detection (symbols or ISO-4217 codes)
+ *   2. Numeric / word-number detection
+ *   3. Pattern-specific parsing (10 canonical patterns to be added in `src/patterns/*`)
+ *
+ * Core Concepts
+ * -------------
+ * • `PipelineContext` – a mutable accumulator passed through every stage.
+ * • `PipelineStep`   – a **pure** function `(input, ctx) => newCtx`.
+ * • `RegexPipeline`  – orchestrates an ordered list of `PipelineStep`s.
+ *
+ * Design Goals
+ * ------------
+ * • **Minimal & stateless** – safe for concurrent calls in browser / server.
+ * • **Extensible** – use `pipeline.addStep()` or build a custom pipeline.
+ * • **Typed** – first-class TypeScript types for DX & downstream API.
+ *
+ * Quick Start for Contributors
+ * ---------------------------
+ * ```ts
+ * // Use the canonical pipeline
+ * const pipeline = RegexPipeline.default();
+ * const result   = pipeline.run("I paid $10 USD");
+ * // -> { original: "I paid $10 USD", currency: "$", amount: 10 }
+ *
+ * // Create and register a new pattern step
+ * import { wordsToNumberStep } from "./patterns/wordNumber";
+ * const custom = RegexPipeline.default().addStep(wordsToNumberStep);
+ * ```
+ *
+ * When adding new regex steps, **clone** the context (see `clone` helper) instead
+ * of mutating it in place to prevent accidental side-effects across stages.
+ */
 export interface PipelineContext {
   original: string; // Original input string
   currency?: string; // Detected currency symbol or ISO code
