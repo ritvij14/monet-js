@@ -68,13 +68,13 @@
         "id": 6,
         "title": "Integrate currency-codes and Implement Data Loading",
         "description": "Integrate the `currency-codes` package and implement logic to load and lookup currency data.",
-        "details": "Install `currency-codes`. Implement a module to import and access currency data from the package. Consider how tree-shaking might be applied or if a custom JSON build step is needed later (optional for MVP).",
+        "details": "Install `currency-codes`. Implement a module to import and access currency data from the package. Consider how tree-shaking might be applied or if a custom JSON build step is needed later (optional for MVP).\n<info added on 2025-06-22T05:45:04.561Z>\nImplementation plan:\n1. Create `src/currencyData.ts` module that imports the `currency-codes` package once and exposes lightweight lookup helpers:\n   - `getCurrencyByCode(code: string)` returns the matching currency entry or null.\n   - `getCurrencyByNumber(number: string)` returns entry or null.\n   - `getAllCurrencies()` returns the raw array for advanced use.\n   These helpers provide a simple, typed facade so the rest of the parser doesn’t touch the large `currency-codes` dataset directly. No symbol mapping yet – that belongs to later pattern-parsing tasks.\n2. Add minimal internal interface `CurrencyInfo` to capture the subset of fields we actually use (`code`, `currency`, `number`, `countries`).  Casting is fine for now; we avoid shipping any runtime wrappers so tree-shaking works.\n3. Write Jest unit tests in `test/currencyData.test.ts` that assert USD/EUR lookups work by both code and numeric ID.  This covers the success path and gives us a red flag if the package structure changes.\n4. Dependency is already declared in `package.json`; no further install step needed.\n5. No public API exposure yet – `index.ts` will re-export once the core parser is wired up.\n\nThese changes are self-contained and unblock downstream tasks that rely on currency data lookups.\n</info added on 2025-06-22T05:45:04.561Z>",
         "testStrategy": "Write unit tests to verify currency data can be loaded and specific currency codes/symbols can be looked up correctly using the implemented logic.",
         "priority": "high",
         "dependencies": [
           2
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -476,7 +476,7 @@
     ],
     "metadata": {
       "created": "2025-06-22T05:27:52.739Z",
-      "updated": "2025-06-22T05:32:48.304Z",
+      "updated": "2025-06-22T05:49:30.261Z",
       "description": "Tasks for master context"
     }
   }
