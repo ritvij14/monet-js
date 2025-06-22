@@ -1,0 +1,38 @@
+{
+  "name": "monet-js",
+  "version": "0.1.0",
+  "description": "Natural-language Monetary Parser",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint \"{src,test}/**/*.ts\"",
+    "test": "jest"
+  },
+  "keywords": [
+    "money",
+    "currency",
+    "parser",
+    "typescript"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "currency-codes": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.6",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.4.0"
+  }
+}

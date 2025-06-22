@@ -1,0 +1,483 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Setup Git Repository and Basic Structure",
+        "description": "Set up the basic Git repository structure for the monet-js library.",
+        "details": "Initialize a git repository. Create basic project directories (e.g., `src`, `test`). Add a `.gitignore` file.",
+        "testStrategy": "Verify repository is initialized and basic structure is present.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Configure TypeScript Compiler (tsconfig.json)",
+        "description": "Configure the TypeScript compiler for the project, targeting Node >= 18 and modern browsers, and enabling dual ESM/CJS output.",
+        "details": "Install TypeScript. Create and configure `tsconfig.json` for dual ESM/CJS builds (e.g., using `moduleResolution`, `module`, `outDir`). Ensure compatibility with Node >= 18 and modern browsers.",
+        "testStrategy": "Compile a simple test file to verify ESM and CJS output directories and file types are generated correctly.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Configure ESLint with Airbnb-base Rules",
+        "description": "Set up ESLint with the Airbnb-base configuration and integrate it into the project.",
+        "details": "Install ESLint and `eslint-config-airbnb-base`. Configure ESLint via `.eslintrc.js` or similar, extending the Airbnb-base config. Add lint scripts to `package.json`.",
+        "testStrategy": "Run the lint script on the codebase (once files exist) to ensure it passes without errors based on the configuration.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Configure Jest and ts-jest for Testing",
+        "description": "Configure Jest and ts-jest for running tests on the TypeScript codebase.",
+        "details": "Install Jest, ts-jest, and `@types/jest`. Configure Jest via `jest.config.js` to use ts-jest for `.ts` files. Add test scripts to `package.json`.",
+        "testStrategy": "Write and run a simple test file (`.test.ts`) to confirm Jest and ts-jest execute correctly.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Implement Custom Error Classes (MoneyParseError, ValueOverflowError)",
+        "description": "Implement custom error classes `MoneyParseError` and `ValueOverflowError`.",
+        "details": "Define `MoneyParseError` and `ValueOverflowError` classes extending the built-in `Error` class. Include relevant properties or messages as needed for helpful errors.",
+        "testStrategy": "Write simple unit tests to instantiate the error classes and verify their properties and inheritance.",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Integrate currency-codes and Implement Data Loading",
+        "description": "Integrate the `currency-codes` package and implement logic to load and lookup currency data.",
+        "details": "Install `currency-codes`. Implement a module to import and access currency data from the package. Consider how tree-shaking might be applied or if a custom JSON build step is needed later (optional for MVP).",
+        "testStrategy": "Write unit tests to verify currency data can be loaded and specific currency codes/symbols can be looked up correctly using the implemented logic.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Implement Core Regex Pipeline Structure",
+        "description": "Implement the core structure for the regex pipeline that processes input strings.",
+        "details": "Create a module or class to manage the sequence of regex checks: currency detection -> numeric/word detection -> pattern-specific parsing. Design the flow for applying these steps to an input string.",
+        "testStrategy": "Create a mock pipeline with simple regex steps and verify that an input string is processed through the defined sequence.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Implement Currency-First Detection Regex",
+        "description": "Implement the currency-first detection regex logic within the pipeline.",
+        "details": "Develop regex patterns to quickly scan for ISO-4217 keywords or symbols using the loaded currency data. Integrate this as the first step in the regex pipeline.",
+        "testStrategy": "Write unit tests with various inputs containing currency symbols or codes (e.g., '$', 'USD', '€', 'GBP') to verify the currency detection regex correctly identifies potential currency indicators.",
+        "priority": "high",
+        "dependencies": [
+          7,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Implement Numeric/Word Detection Regex",
+        "description": "Implement the numeric/word detection regex logic within the pipeline.",
+        "details": "Develop regex patterns to identify potential numeric or worded number parts of the input string. Integrate this step after currency detection in the pipeline.",
+        "testStrategy": "Write unit tests with inputs containing numbers (plain, with separators), worded numbers ('one hundred'), and numeric-word combos ('10k') to verify the numeric/word detection regex correctly identifies these parts.",
+        "priority": "high",
+        "dependencies": [
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Implement Parser for Plain Numbers Pattern",
+        "description": "Implement the pattern parser for Plain Numbers (e.g., '123').",
+        "details": "Create a specific parser function or module for the 'Plain Numbers' pattern. This parser should take a matched substring and convert it to a numeric value.",
+        "testStrategy": "Write unit tests with various plain number strings ('1', '123', '999999') to verify the parser correctly extracts and converts the numeric value.",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Implement Parser for Numbers with Separators Pattern",
+        "description": "Implement the pattern parser for Numbers with Separators (e.g., '1,234.56').",
+        "details": "Create a parser for numbers including thousands separators (',') and decimal points ('.'). Handle different separator conventions if necessary (though PRD doesn't specify locales yet, focus on common ones).",
+        "testStrategy": "Write unit tests with strings like '1,000', '1.23', '1,234,567.89' to verify the parser correctly handles separators and converts to the correct numeric value.",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Implement Parser for Symbols Pattern",
+        "description": "Implement the pattern parser for Symbols (e.g., '$100').",
+        "details": "Create a parser that recognizes currency symbols attached to numbers. Use the currency data to map symbols to ISO codes.",
+        "testStrategy": "Write unit tests with strings like '$100', '€50', '£20.50' to verify the parser correctly identifies the symbol, extracts the number, and maps the symbol to the correct ISO currency code.",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Implement Parser for Abbreviations Pattern",
+        "description": "Implement the pattern parser for Abbreviations (e.g., 'USD 100').",
+        "details": "Create a parser that recognizes ISO 4217 currency abbreviations preceding or following a number. Use the currency data for lookup.",
+        "testStrategy": "Write unit tests with strings like 'USD 100', 'EUR 50', 'GBP 20.50', '100 CAD' to verify the parser correctly identifies the abbreviation, extracts the number, and maps the abbreviation to the correct ISO currency code.",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Implement Parser for Worded Numbers Pattern",
+        "description": "Implement the pattern parser for Worded Numbers (e.g., 'one hundred dollars').",
+        "details": "Create a parser that converts worded numbers (e.g., 'one', 'ten', 'hundred', 'thousand', 'million') into their numeric equivalents.",
+        "testStrategy": "Write unit tests with strings like 'one', 'twenty', 'one hundred', 'two thousand', 'one million' to verify the parser correctly converts the worded number to a numeric value.",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Implement Parser for Fractional Worded Numbers Pattern",
+        "description": "Implement the pattern parser for Fractional Worded Numbers (e.g., 'half a dollar').",
+        "details": "Create a parser that handles fractional worded numbers like 'half', 'quarter', etc., potentially combined with currency.",
+        "testStrategy": "Write unit tests with strings like 'half a dollar', 'quarter pound' (if applicable, focus on monetary context) to verify correct numeric conversion.",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Implement Parser for Numeric-Word Combos Pattern",
+        "description": "Implement the pattern parser for Numeric-Word Combos (e.g., '10k').",
+        "details": "Create a parser that handles combinations of numbers and words representing magnitude (e.g., 'k', 'm', 'bn').",
+        "testStrategy": "Write unit tests with strings like '10k', '5m', '2bn' to verify the parser correctly calculates the numeric value (10,000, 5,000,000, 2,000,000,000).",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Implement Parser for Slang Terms Pattern",
+        "description": "Implement the pattern parser for Slang Terms (e.g., 'buck', 'quid').",
+        "details": "Create a parser that recognizes common slang terms for currency units and maps them to the appropriate currency and value.",
+        "testStrategy": "Write unit tests with strings like 'buck', 'quid', 'fiver', 'tenner' to verify the parser correctly identifies the slang term and associated value/currency (assuming US/UK context based on examples).",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Implement Parser for Contextual Phrases Pattern",
+        "description": "Implement the pattern parser for Contextual Phrases (e.g., 'a hundred dollars').",
+        "details": "Create a parser that handles numbers and currencies embedded within simple phrases, potentially including articles ('a', 'the').",
+        "testStrategy": "Write unit tests with strings like 'a hundred dollars', 'the fifty euros' to verify the parser extracts the core monetary expression.",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Implement Parser for Regional Formats Pattern",
+        "description": "Implement the pattern parser for Regional Formats (e.g., '1.234,56 €').",
+        "details": "Create a parser that handles regional variations in number formatting (decimal/thousands separators) and currency symbol/code placement.",
+        "testStrategy": "Write unit tests with strings like '1.234,56 €', '€ 1.234,56', '5,678.90 $' to verify the parser correctly handles regional formatting and currency association.",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          8,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Implement Currency Normalisation",
+        "description": "Implement currency normalisation logic using the `currency-codes` dataset.",
+        "details": "Create a function or module to take a potential currency identifier (symbol, code, name) and normalize it to an ISO 4217 code using the `currency-codes` data.",
+        "testStrategy": "Write unit tests with various inputs ('$', 'USD', 'Euro', 'GBP') to verify they are correctly normalized to their ISO 4217 codes ('USD', 'EUR', 'GBP'). Test cases for unknown currencies should result in an error or null/undefined output depending on implementation.",
+        "priority": "high",
+        "dependencies": [
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Implement parseMoney Function",
+        "description": "Implement the `parseMoney` function, integrating the regex pipeline, pattern parsers, currency normalization, and error handling.",
+        "details": "Create the `parseMoney(input: string, opts?: ParseOptions): ParseResult | null` function. This function should orchestrate the regex pipeline, apply pattern parsers to matches, normalize the currency, and return the `ParseResult` object or `null` if no match is found. Handle the `defaultCurrency` and `strict` options.",
+        "testStrategy": "Write integration tests covering various input strings and options (`defaultCurrency`, `strict`) to verify correct parsing, currency normalization, and the structure of the returned `ParseResult` object or `null`.",
+        "priority": "high",
+        "dependencies": [
+          5,
+          7,
+          8,
+          9,
+          20,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Implement parseAll Function",
+        "description": "Implement the `parseAll` function to find all monetary expressions in a string.",
+        "details": "Create the `parseAll(input: string, opts?: ParseOptions): ParseResult[]` function. This function should iterate through the input string, potentially using the `parseMoney` logic or a variation of the pipeline, to find all occurrences of monetary expressions and return an array of `ParseResult` objects.",
+        "testStrategy": "Write integration tests with strings containing multiple monetary expressions (e.g., 'I have $100 and he has €50') to verify all instances are found and parsed correctly into an array of `ParseResult` objects.",
+        "priority": "medium",
+        "dependencies": [
+          21
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "Implement Value Overflow Check and Error",
+        "description": "Implement the check for numeric value exceeding `Number.MAX_SAFE_INTEGER` and throw `ValueOverflowError`.",
+        "details": "Within the parsing logic (likely in individual parsers or the final value conversion step), add a check to compare the resulting numeric amount against `Number.MAX_SAFE_INTEGER`. If it exceeds this limit, throw a `ValueOverflowError`.",
+        "testStrategy": "Write unit or integration tests with inputs representing numbers larger than `Number.MAX_SAFE_INTEGER` (e.g., '9007199254740992', '10 quadrillion') to verify that a `ValueOverflowError` is correctly thrown.",
+        "priority": "high",
+        "dependencies": [
+          5,
+          21
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Write Unit Tests for Pattern Parsers (Fixtures)",
+        "description": "Write comprehensive unit tests for each of the 10 pattern parsers using specific fixtures.",
+        "details": "Create test files for each pattern parser. Use representative input strings (fixtures) covering various valid cases and edge cases for each pattern. Verify the parser correctly extracts the numeric value and any associated currency information.",
+        "testStrategy": "Run Jest tests for all pattern parsers. Ensure tests cover a wide range of fixtures and achieve high code coverage for the parser logic.",
+        "priority": "high",
+        "dependencies": [
+          4,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "Write Unit Tests for API Functions and Errors",
+        "description": "Write unit tests for the public API functions (`parseMoney`, `parseAll`) including error handling cases.",
+        "details": "Create test files for `parseMoney` and `parseAll`. Test various valid inputs, inputs with no matches, inputs triggering `MoneyParseError` (e.g., unknown currency with `strict: true`), and inputs triggering `ValueOverflowError`. Verify return values and thrown errors.",
+        "testStrategy": "Run Jest tests for the API functions. Ensure tests cover successful parsing, null results, and all specified error conditions.",
+        "priority": "high",
+        "dependencies": [
+          4,
+          21,
+          22,
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "Implement Property-Based Fuzzing Tests (fast-check)",
+        "description": "Implement property-based fuzzing tests using `fast-check` to improve test coverage and robustness.",
+        "details": "Install `fast-check`. Write property-based tests that generate random strings or structured inputs and pass them to `parseMoney` or `parseAll`. Define properties that the output should satisfy (e.g., if a number is clearly present, the amount should be numeric).",
+        "testStrategy": "Run the property-based tests with a sufficient number of iterations. Analyze any failing cases to identify bugs or missing pattern handling.",
+        "priority": "medium",
+        "dependencies": [
+          4,
+          21,
+          22
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 27,
+        "title": "Configure Dual ESM/CJS Build Process",
+        "description": "Configure the build process to generate dual ESM and CJS outputs from the TypeScript source.",
+        "details": "Use the configured `tsconfig.json` and potentially a build tool (like Rollup or Webpack, though TS compiler might suffice) to produce separate ESM and CJS bundles or file structures in the output directory.",
+        "testStrategy": "Verify the output directory contains both ESM and CJS versions of the library files. Test importing the library in a simple Node.js script using both `require()` (CJS) and `import()` (ESM).",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 28,
+        "title": "Configure UMD Bundle Generation for Demo Site",
+        "description": "Configure the build process to generate a separate minified UMD bundle specifically for the demo site.",
+        "details": "Use a bundler (like Rollup or Webpack) to create a single minified UMD file from the library source. This bundle should be suitable for inclusion via a `<script>` tag.",
+        "testStrategy": "Verify a single minified UMD file is generated. Create a simple HTML file with a `<script>` tag pointing to the UMD file and verify the library's public API is available on the global scope (e.g., `window.monetJs.parseMoney`).",
+        "priority": "medium",
+        "dependencies": [
+          27
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 29,
+        "title": "Configure GitHub Actions CI Pipeline (Lint, Test, Build)",
+        "description": "Configure the GitHub Actions CI pipeline to run linting, testing, and building steps.",
+        "details": "Create a GitHub Actions workflow file (`.github/workflows/ci.yml`). Define jobs for linting (Task 3), testing (Task 4), and building (Task 27). Configure the workflow to trigger on pushes and pull requests.",
+        "testStrategy": "Push code to a GitHub repository to trigger the CI workflow. Verify that all steps (lint, test, build) pass successfully in the CI environment.",
+        "priority": "high",
+        "dependencies": [
+          3,
+          4,
+          27
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 30,
+        "title": "Add Size-Limit Check to CI Pipeline",
+        "description": "Add a size-limit check to the CI pipeline to gate bundle size (<5 kB gzip).",
+        "details": "Install `size-limit`. Configure `size-limit` to check the gzip size of the main library bundle(s). Add a step to the CI workflow to run the size-limit check.",
+        "testStrategy": "Run the CI workflow. Verify the size-limit check is executed and passes, ensuring the bundle size remains below the specified threshold.",
+        "priority": "high",
+        "dependencies": [
+          29
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 31,
+        "title": "Set up Changesets for Automated Releases",
+        "description": "Set up Changesets for automated semantic versioning and release management.",
+        "details": "Install Changesets CLI. Run `changeset init` to set up the necessary files. Document the process for adding changesets for future contributions.",
+        "testStrategy": "Follow the Changesets workflow to create a changeset, run `changeset version`, and verify that version bumps and changelog entries are generated correctly.",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 32,
+        "title": "Build Live Demo Website (Vite)",
+        "description": "Build the live demo website using Vite, consuming the UMD bundle.",
+        "details": "Set up a new project directory for the demo site (e.g., `demo`). Use Vite to serve static HTML, CSS, and minimal vanilla JS. The JS should import and use the generated UMD bundle of `monet-js` to provide real-time parsing functionality.",
+        "testStrategy": "Run the Vite development server for the demo site. Open the site in a browser and verify that the `monet-js` library is loaded and the real-time parsing feature works as expected.",
+        "priority": "medium",
+        "dependencies": [
+          28
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 33,
+        "title": "Configure GitHub Pages Deployment for Demo Site",
+        "description": "Configure GitHub Pages deployment for the demo website via GitHub Actions.",
+        "details": "Update the GitHub Actions workflow or create a new one to build the demo site (Task 32) and deploy the output to GitHub Pages on pushes to a specific branch (e.g., `main` or `gh-pages`).",
+        "testStrategy": "Push changes to trigger the deployment workflow. Verify that the demo site is successfully deployed and accessible via the GitHub Pages URL.",
+        "priority": "medium",
+        "dependencies": [
+          29,
+          32
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-06-22T05:27:52.739Z",
+      "updated": "2025-06-22T05:32:48.304Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

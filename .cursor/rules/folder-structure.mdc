@@ -1,0 +1,28 @@
+---
+description: Tree like folder structure of kendal-app project.
+globs: 
+alwaysApply: true
+---
+
+# Project folder structure.
+
+```
+kendal-app
+├── jest.config.js
+├── package.json
+├── tsconfig.json
+├── .cursor
+│   ├── rules
+├── .scripts
+│   ├── update_structure.sh
+├── .taskmaster
+│   ├── config.json
+│   ├── state.json
+│   ├── docs
+│   │   ├── monet_spec.md
+│   ├── tasks
+│   │   ├── tasks.json
+├── src
+│   ├── main.ts
+├── test
+```

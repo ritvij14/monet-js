@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+- When you create new files/folders in the project, always run the script in .scripts using:
+```bash
+./.scripts/update_structure.sh
+```
+This is to update the folder structure cursor rule so that the current agent already knows what the folder structure is without having to read the entire directory and multiple folders.
