@@ -95,19 +95,47 @@ export class RegexPipeline {
 // ---------------------------------------------------------------------------
 import { getCurrencyByCode } from "./currencyData";
 
+// ---------------------------------------------------------------------------
+// Currency helpers
+// ---------------------------------------------------------------------------
+/**
+ * Minimal lookup table for common currency symbols → ISO-4217 code.
+ * Note: ambiguous symbols (e.g., "$") are mapped to the symbol itself; the
+ *       downstream pipeline can disambiguate once more context is available.
+ */
+const SYMBOL_TO_CODE: Record<string, string> = {
+  $: "USD", // Could be other dollar currencies, but USD is most common.
+  "€": "EUR",
+  "£": "GBP",
+  "¥": "JPY", // ¥ is shared by JPY & CNY – default to JPY.
+  "₹": "INR",
+  "₽": "RUB",
+  "₩": "KRW",
+  "฿": "THB",
+};
+
+// Build a character class for the known symbols – escape where needed.
+const SYMBOL_REGEX = new RegExp(
+  `[${Object.keys(SYMBOL_TO_CODE)
+    .map((s) => `\\${s}`) // escape metacharacters
+    .join("")}]`
+);
+
 /** 1) Currency detection step */
 const currencyDetectionStep: PipelineStep = (input, ctx) => {
   const out = clone(ctx);
 
-  // ISO code (3 uppercase letters) — e.g. "USD", "EUR".
-  const isoMatch = /(?:\b|^)([A-Z]{3})(?:\b|$)/.exec(input);
-  // Common currency symbols ($, €, £, ¥)
-  const symbolMatch = /[\$€£¥]/.exec(input);
+  // ISO code (3 letters) — case-insensitive, verified via currency data.
+  const isoMatch = /(?:\b|^)([A-Za-z]{3})(?:\b|$)/.exec(input);
 
-  if (isoMatch && getCurrencyByCode(isoMatch[1])) {
-    out.currency = isoMatch[1];
+  // Known currency symbols
+  const symbolMatch = SYMBOL_REGEX.exec(input);
+
+  if (isoMatch && getCurrencyByCode(isoMatch[1].toUpperCase())) {
+    out.currency = isoMatch[1].toUpperCase();
   } else if (symbolMatch) {
-    out.currency = symbolMatch[0];
+    const detected = symbolMatch[0];
+    out.currency = SYMBOL_TO_CODE[detected] ?? detected;
   }
 
   return out;
