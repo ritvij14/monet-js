@@ -51,4 +51,28 @@ describe("RegexPipeline", () => {
     expect(result.currency).toBe("USD");
     expect(result.amount).toBe(10000);
   });
+
+  test("detects currency by full name", () => {
+    const pipeline = RegexPipeline.default();
+
+    const euro = pipeline.run("He spent 50 Euro on dinner");
+    expect(euro.currency).toBe("EUR");
+    expect(euro.amount).toBe(50);
+
+    const yen = pipeline.run("Tickets cost 200 yen");
+    expect(yen.currency).toBe("JPY");
+    expect(yen.amount).toBe(200);
+
+    const dollar = pipeline.run("He paid 100 dollars");
+    expect(dollar.currency).toBe("USD");
+    expect(dollar.amount).toBe(100);
+
+    const pound = pipeline.run("He paid 100 pounds");
+    expect(pound.currency).toBe("GBP");
+    expect(pound.amount).toBe(100);
+
+    const rupee = pipeline.run("He paid 100 rupees");
+    expect(rupee.currency).toBe("INR");
+    expect(rupee.amount).toBe(100);
+  });
 });

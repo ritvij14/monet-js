@@ -93,7 +93,7 @@ export class RegexPipeline {
 // ---------------------------------------------------------------------------
 // Default Step Implementations
 // ---------------------------------------------------------------------------
-import { getCurrencyByCode } from "./currencyData";
+import { getAllCurrencies, getCurrencyByCode } from "./currencyData";
 
 // ---------------------------------------------------------------------------
 // Currency helpers
@@ -113,6 +113,42 @@ const SYMBOL_TO_CODE: Record<string, string> = {
   "₩": "KRW",
   "฿": "THB",
 };
+
+/**
+ * Lookup table for currency names (and significant words within those names) → ISO-4217 code.
+ * Built once at module load time from the `currency-codes` dataset for O(1) look-ups.
+ */
+const NAME_TO_CODE: Record<string, string> = (() => {
+  const map: Record<string, string> = {};
+  for (const cur of getAllCurrencies()) {
+    const nameLower = cur.currency.toLowerCase();
+    map[nameLower] = cur.code;
+
+    // Also map individual words (≥3 chars) within the currency name to handle inputs like "Euro" or "Peso".
+    for (const word of nameLower.split(/\s+/)) {
+      if (word.length > 2) {
+        map[word] = cur.code;
+        // Add simple plural form if it ends differently
+        if (!word.endsWith("s")) {
+          map[`${word}s`] = cur.code;
+        }
+      }
+    }
+  }
+
+  // Manual overrides for ambiguous currency words – prefer most common.
+  const overrides: Record<string, string> = {
+    dollar: "USD",
+    dollars: "USD",
+    pound: "GBP",
+    pounds: "GBP",
+    rupee: "INR",
+    rupees: "INR",
+    won: "KRW", // keep won—but ISO precedence will apply if both present
+  };
+  Object.assign(map, overrides);
+  return map;
+})();
 
 // Build a character class for the known symbols – escape where needed.
 const SYMBOL_REGEX = new RegExp(
@@ -218,6 +254,22 @@ const currencyDetectionStep: PipelineStep = (input, ctx) => {
     const upper = candidate.toUpperCase();
     if (getCurrencyByCode(upper)) {
       out.currency = upper;
+      break;
+    }
+  }
+
+  // If currency already identified by ISO code, skip name detection.
+  if (out.currency) {
+    return out;
+  }
+
+  // 3) Full currency names or significant words (length ≥3) within them (e.g., "Euro", "Peso", "Yen", "dollars").
+  const nameCandidates = input.match(/\b[A-Za-z]{3,}\b/g) ?? [];
+  for (const token of nameCandidates) {
+    const lookupToken = token.toLowerCase();
+    const code = NAME_TO_CODE[lookupToken];
+    if (code) {
+      out.currency = code;
       break;
     }
   }
