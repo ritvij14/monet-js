@@ -121,21 +121,105 @@ const SYMBOL_REGEX = new RegExp(
     .join("")}]`
 );
 
+// ---------------------------------------------------------------------------
+// Numeric helpers (word-to-number + suffix multipliers)
+// ---------------------------------------------------------------------------
+/**
+ * Converts an English worded number ("one hundred twenty three", "five thousand") to its numeric value.
+ * Handles the most common cases needed for monetary amounts (units, tens, hundreds, thousands, millions, billions).
+ * Returns `null` if the string cannot be parsed confidently.
+ */
+const wordsToNumber = (words: string): number | null => {
+  if (!words) return null;
+  const tokens = words
+    .toLowerCase()
+    .replace(/-/g, " ")
+    .replace(/ and /g, " ")
+    .trim()
+    .split(/\s+/);
+
+  const SMALL: Record<string, number> = {
+    zero: 0,
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    six: 6,
+    seven: 7,
+    eight: 8,
+    nine: 9,
+    ten: 10,
+    eleven: 11,
+    twelve: 12,
+    thirteen: 13,
+    fourteen: 14,
+    fifteen: 15,
+    sixteen: 16,
+    seventeen: 17,
+    eighteen: 18,
+    nineteen: 19,
+    twenty: 20,
+    thirty: 30,
+    forty: 40,
+    fifty: 50,
+    sixty: 60,
+    seventy: 70,
+    eighty: 80,
+    ninety: 90,
+  };
+  const MAGNITUDE: Record<string, number> = {
+    hundred: 100,
+    thousand: 1_000,
+    million: 1_000_000,
+    billion: 1_000_000_000,
+  };
+
+  let total = 0;
+  let current = 0;
+  for (const token of tokens) {
+    if (SMALL[token] !== undefined) {
+      current += SMALL[token];
+    } else if (token === "hundred") {
+      current *= 100;
+    } else if (MAGNITUDE[token]) {
+      total += current * MAGNITUDE[token];
+      current = 0;
+    } else {
+      // Unknown token – bail out to avoid false positives
+      return null;
+    }
+  }
+  return total + current;
+};
+
+/** Map shorthand suffixes (k, m, b) to multipliers. */
+const SUFFIX_MULTIPLIER: Record<string, number> = {
+  k: 1_000,
+  m: 1_000_000,
+  b: 1_000_000_000,
+};
+
 /** 1) Currency detection step */
 const currencyDetectionStep: PipelineStep = (input, ctx) => {
   const out = clone(ctx);
 
-  // ISO code (3 letters) — case-insensitive, verified via currency data.
-  const isoMatch = /(?:\b|^)([A-Za-z]{3})(?:\b|$)/.exec(input);
-
-  // Known currency symbols
+  // 1) Known currency symbols first (quick win, 1-char to 3-char tokens)
   const symbolMatch = SYMBOL_REGEX.exec(input);
-
-  if (isoMatch && getCurrencyByCode(isoMatch[1].toUpperCase())) {
-    out.currency = isoMatch[1].toUpperCase();
-  } else if (symbolMatch) {
+  if (symbolMatch) {
     const detected = symbolMatch[0];
     out.currency = SYMBOL_TO_CODE[detected] ?? detected;
+    return out;
+  }
+
+  // 2) ISO code (3 letters) — search all 3-letter word tokens and return the first valid currency.
+  const isoCandidates = input.match(/\b[A-Za-z]{3}\b/g) ?? [];
+  for (const candidate of isoCandidates) {
+    const upper = candidate.toUpperCase();
+    if (getCurrencyByCode(upper)) {
+      out.currency = upper;
+      break;
+    }
   }
 
   return out;
@@ -144,11 +228,45 @@ const currencyDetectionStep: PipelineStep = (input, ctx) => {
 /** 2) Numeric / word-number detection (simple digits & decimals for now) */
 const numericDetectionStep: PipelineStep = (input, ctx) => {
   const out = clone(ctx);
-  const numMatch = /(?:\b|^)(\d+(?:\.\d+)?)(?:\b|$)/.exec(input);
+
+  // Normalize input: remove common thousand separators (",") to simplify parsing.
+  const cleaned = input.replace(/,/g, "");
+
+  // ---------------------------------------------------------------------
+  // 1) Numeric value with optional shorthand suffix (k, m, b)
+  // ---------------------------------------------------------------------
+  const suffixMatch = /(?:\b|^)(\d+(?:\.\d+)?)([kKmMbB])(?:\b|$)/.exec(cleaned);
+  if (suffixMatch) {
+    const value = parseFloat(suffixMatch[1]);
+    const multiplier = SUFFIX_MULTIPLIER[suffixMatch[2].toLowerCase()];
+    if (!isNaN(value)) {
+      out.amount = value * multiplier;
+      return out;
+    }
+  }
+
+  // ---------------------------------------------------------------------
+  // 2) Plain numeric (digits and decimals)
+  // ---------------------------------------------------------------------
+  const numMatch = /(?:\b|^)(\d+(?:\.\d+)?)(?:\b|$)/.exec(cleaned);
   if (numMatch) {
     out.amount = parseFloat(numMatch[1]);
+    return out;
   }
-  // TODO: Add word-to-number mapping ("ten", "twenty five", etc.) in future.
+
+  // ---------------------------------------------------------------------
+  // 3) Worded numbers ("one hundred twenty", "two thousand")
+  // ---------------------------------------------------------------------
+  const wordNumberRegex =
+    /\b((?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion)(?:[\s-](?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion))*)\b/i;
+  const wordMatch = wordNumberRegex.exec(cleaned);
+  if (wordMatch) {
+    const parsed = wordsToNumber(wordMatch[1]);
+    if (parsed !== null) {
+      out.amount = parsed;
+    }
+  }
+
   return out;
 };
 

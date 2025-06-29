@@ -35,4 +35,20 @@ describe("RegexPipeline", () => {
     expect(res.currency).toBe("GBP");
     expect(res.amount).toBe(100);
   });
+
+  test("detects worded numbers", () => {
+    const pipeline = RegexPipeline.default();
+    const result = pipeline.run("I owe you one hundred forty five GBP");
+
+    expect(result.currency).toBe("GBP");
+    expect(result.amount).toBe(145);
+  });
+
+  test("detects numeric shorthand suffix (k/m/b)", () => {
+    const pipeline = RegexPipeline.default();
+    const result = pipeline.run("He won 10k USD");
+
+    expect(result.currency).toBe("USD");
+    expect(result.amount).toBe(10000);
+  });
 });
