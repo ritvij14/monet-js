@@ -27,3 +27,11 @@ node_modules/
 # Task files
 # tasks.json
 # tasks/ 
+
+# Build artifacts
+dist/
+
+# Test artifacts
+coverage/
+
+# Build artifacts

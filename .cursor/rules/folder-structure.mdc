@@ -8,8 +8,11 @@ alwaysApply: true
 
 ```
 kendal-app
+├── eslint.config.cjs
 ├── jest.config.js
+├── package-lock.json
 ├── package.json
+├── tsconfig.cjs.json
 ├── tsconfig.json
 ├── .cursor
 │   ├── rules
@@ -22,7 +25,40 @@ kendal-app
 │   │   ├── monet_spec.md
 │   ├── tasks
 │   │   ├── tasks.json
+├── dist
+│   ├── cjs
+│   │   ├── src
+│   │   │   ├── currencyData.d.ts
+│   │   │   ├── currencyData.js
+│   │   │   ├── index.d.ts
+│   │   │   ├── index.js
+│   │   │   ├── regexPipeline.d.ts
+│   │   │   ├── regexPipeline.js
+│   │   ├── test
+│   │   │   ├── currencyData.test.d.ts
+│   │   │   ├── currencyData.test.js
+│   │   │   ├── regexPipeline.test.d.ts
+│   │   │   ├── regexPipeline.test.js
+│   ├── esm
+│   │   ├── src
+│   │   │   ├── currencyData.d.ts
+│   │   │   ├── currencyData.js
+│   │   │   ├── index.d.ts
+│   │   │   ├── index.js
+│   │   │   ├── regexPipeline.d.ts
+│   │   │   ├── regexPipeline.js
+│   │   ├── test
+│   │   │   ├── currencyData.test.d.ts
+│   │   │   ├── currencyData.test.js
+│   │   │   ├── regexPipeline.test.d.ts
+│   │   │   ├── regexPipeline.test.js
 ├── src
-│   ├── main.ts
+│   ├── currencyData.ts
+│   ├── index.ts
+│   ├── regexPipeline.ts
+│   ├── types
+│   │   ├── currency-codes.d.ts
 ├── test
+│   ├── currencyData.test.ts
+│   ├── regexPipeline.test.ts
 ```

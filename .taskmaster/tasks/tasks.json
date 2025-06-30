@@ -268,7 +268,7 @@
         "dependencies": [
           6
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -383,13 +383,13 @@
         "id": 27,
         "title": "Configure Dual ESM/CJS Build Process",
         "description": "Configure the build process to generate dual ESM and CJS outputs from the TypeScript source.",
-        "details": "Use the configured `tsconfig.json` and potentially a build tool (like Rollup or Webpack, though TS compiler might suffice) to produce separate ESM and CJS bundles or file structures in the output directory.",
+        "details": "Use the configured `tsconfig.json` and potentially a build tool (like Rollup or Webpack, though TS compiler might suffice) to produce separate ESM and CJS bundles or file structures in the output directory.\n<info added on 2025-06-29T17:03:14.182Z>\nImplementation plan (initial) for Dual ESM/CJS build:\n1. Add `tsconfig.cjs.json` extending base tsconfig but overriding:\n   {\n     \"extends\": \"./tsconfig.json\",\n     \"compilerOptions\": {\n       \"module\": \"CommonJS\",\n       \"outDir\": \"dist/cjs\"\n     }\n   }\n2. Retain `tsconfig.json` with ESNext module and `dist/esm` outDir.\n3. Update `package.json`:\n   - Add scripts:\n     \"clean\": \"rimraf dist\",\n     \"build:esm\": \"tsc -p tsconfig.json\",\n     \"build:cjs\": \"tsc -p tsconfig.cjs.json\",\n     \"build\": \"npm run clean && npm run build:esm && npm run build:cjs\".\n   - Add `exports` field for conditional exports:\n     {\n       \"import\": \"./dist/esm/index.js\",\n       \"require\": \"./dist/cjs/index.js\"\n     }\n   - Set `main`: \"./dist/cjs/index.js\",\n     `module`: \"./dist/esm/index.js\",\n     `types`: \"./dist/esm/index.d.ts\".\n4. Install `rimraf` as devDependency.\n5. Optionally configure `typesVersions` mapping for older TS consumers (skip for now).\n6. Verify build by running `npm run build` producing both directories and test require/import in node.\n\nNext steps:\n- Create tsconfig.cjs.json file.\n- Modify package.json scripts and exports.\n- Install rimraf.\n- Run build and adjust tests.\n- Update documentation if needed.\n</info added on 2025-06-29T17:03:14.182Z>",
         "testStrategy": "Verify the output directory contains both ESM and CJS versions of the library files. Test importing the library in a simple Node.js script using both `require()` (CJS) and `import()` (ESM).",
         "priority": "high",
         "dependencies": [
           2
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -476,7 +476,7 @@
     ],
     "metadata": {
       "created": "2025-06-22T05:27:52.739Z",
-      "updated": "2025-06-29T16:26:05.658Z",
+      "updated": "2025-06-30T05:42:41.407Z",
       "description": "Tasks for master context"
     }
   }
