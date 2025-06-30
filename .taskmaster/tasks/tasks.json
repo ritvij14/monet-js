@@ -417,7 +417,7 @@
           4,
           27
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -472,11 +472,26 @@
         ],
         "status": "pending",
         "subtasks": []
+      },
+      {
+        "id": 34,
+        "title": "Add Build Step to CI Pipeline",
+        "description": "Reintroduce the 'npm run build' step into the GitHub Actions workflow (ci.yml) to ensure build artifacts are generated during CI runs.",
+        "details": "Modify the '.github/workflows/ci.yml' file. Add a step that runs 'npm run build' after the linting and testing steps have successfully completed. Ensure the build command is correct and the step is named appropriately, e.g., 'Build Library'. This step should execute the build configurations defined in tasks 27 and 28.",
+        "testStrategy": "Trigger the CI workflow by pushing a change or opening a pull request. Verify that the 'Build Library' step is executed in the workflow run and completes successfully without errors. Check the workflow logs to confirm the 'npm run build' command was run and produced the expected output artifacts.",
+        "status": "pending",
+        "dependencies": [
+          29,
+          27,
+          28
+        ],
+        "priority": "medium",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-06-22T05:27:52.739Z",
-      "updated": "2025-06-30T05:42:41.407Z",
+      "updated": "2025-06-30T11:17:17.717Z",
       "description": "Tasks for master context"
     }
   }
