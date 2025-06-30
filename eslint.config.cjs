@@ -14,6 +14,9 @@ const compat = new FlatCompat({
 });
 
 module.exports = defineConfig([
+  {
+    ignores: ["test/**/*"],
+  },
   ...compat.extends("plugin:@typescript-eslint/recommended"),
   {
     languageOptions: {
