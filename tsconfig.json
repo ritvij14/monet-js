@@ -9,8 +9,9 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "types": ["jest", "node"],
+    "rootDir": "src",
     "outDir": "dist/esm"
   },
-  "include": ["src", "test"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "test"]
 }

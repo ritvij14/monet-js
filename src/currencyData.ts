@@ -14,7 +14,7 @@ export interface CurrencyInfo {
  */
 export function getCurrencyByCode(code: string): CurrencyInfo | null {
   if (!code) return null;
-  const entry = (currencyCodes as any).code(code.toUpperCase()) as
+  const entry = currencyCodes.code(code.toUpperCase()) as
     | CurrencyInfo
     | undefined;
   return entry ?? null;
@@ -26,9 +26,7 @@ export function getCurrencyByCode(code: string): CurrencyInfo | null {
  */
 export function getCurrencyByNumber(numericCode: string): CurrencyInfo | null {
   if (!numericCode) return null;
-  const entry = (currencyCodes as any).number(numericCode) as
-    | CurrencyInfo
-    | undefined;
+  const entry = currencyCodes.number(numericCode) as CurrencyInfo | undefined;
   return entry ?? null;
 }
 
@@ -37,5 +35,5 @@ export function getCurrencyByNumber(numericCode: string): CurrencyInfo | null {
  * Useful for advanced look-ups or tooling.
  */
 export function getAllCurrencies(): CurrencyInfo[] {
-  return (currencyCodes as any).data as CurrencyInfo[];
+  return currencyCodes.data as CurrencyInfo[];
 }
