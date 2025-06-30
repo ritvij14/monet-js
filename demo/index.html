@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Monet JS Demo (UMD)</title>
+  </head>
+  <body>
+    <h1>Monet JS UMD Demo</h1>
+    <script src="../dist/umd/monet-js.min.js"></script>
+    <script>
+      const pipeline = window.monetJs.RegexPipeline.default();
+      const result = pipeline.run("$12.34");
+      console.log(result);
+      document.body.insertAdjacentHTML(
+        "beforeend",
+        `<pre>${JSON.stringify(result, null, 2)}</pre>`
+      );
+    </script>
+  </body>
+</html>
