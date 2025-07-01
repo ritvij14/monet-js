@@ -12,10 +12,19 @@ kendal-app
 ├── jest.config.js
 ├── package-lock.json
 ├── package.json
+├── README.md
+├── rollup.config.js
 ├── tsconfig.cjs.json
 ├── tsconfig.json
+├── .changeset
+│   ├── config.json
+│   ├── README.md
 ├── .cursor
 │   ├── rules
+├── .github
+│   ├── workflows
+│   │   ├── ci.yml
+│   │   ├── release.yml
 ├── .scripts
 │   ├── update_structure.sh
 ├── .taskmaster
@@ -23,42 +32,43 @@ kendal-app
 │   ├── state.json
 │   ├── docs
 │   │   ├── monet_spec.md
+│   ├── reports
+│   │   ├── task-complexity-report.json
 │   ├── tasks
 │   │   ├── tasks.json
+├── demo
+│   ├── index.html
 ├── dist
 │   ├── cjs
-│   │   ├── src
-│   │   │   ├── currencyData.d.ts
-│   │   │   ├── currencyData.js
-│   │   │   ├── index.d.ts
-│   │   │   ├── index.js
-│   │   │   ├── regexPipeline.d.ts
-│   │   │   ├── regexPipeline.js
-│   │   ├── test
-│   │   │   ├── currencyData.test.d.ts
-│   │   │   ├── currencyData.test.js
-│   │   │   ├── regexPipeline.test.d.ts
-│   │   │   ├── regexPipeline.test.js
+│   │   ├── currencyData.d.ts
+│   │   ├── currencyData.js
+│   │   ├── errors.d.ts
+│   │   ├── errors.js
+│   │   ├── index.d.ts
+│   │   ├── index.js
+│   │   ├── regexPipeline.d.ts
+│   │   ├── regexPipeline.js
 │   ├── esm
-│   │   ├── src
-│   │   │   ├── currencyData.d.ts
-│   │   │   ├── currencyData.js
-│   │   │   ├── index.d.ts
-│   │   │   ├── index.js
-│   │   │   ├── regexPipeline.d.ts
-│   │   │   ├── regexPipeline.js
-│   │   ├── test
-│   │   │   ├── currencyData.test.d.ts
-│   │   │   ├── currencyData.test.js
-│   │   │   ├── regexPipeline.test.d.ts
-│   │   │   ├── regexPipeline.test.js
+│   │   ├── currencyData.d.ts
+│   │   ├── currencyData.js
+│   │   ├── errors.d.ts
+│   │   ├── errors.js
+│   │   ├── index.d.ts
+│   │   ├── index.js
+│   │   ├── regexPipeline.d.ts
+│   │   ├── regexPipeline.js
+│   ├── umd
+│   │   ├── monet-js.min.js
+│   │   ├── monet-js.min.js.map
 ├── src
 │   ├── currencyData.ts
+│   ├── errors.ts
 │   ├── index.ts
 │   ├── regexPipeline.ts
 │   ├── types
 │   │   ├── currency-codes.d.ts
 ├── test
 │   ├── currencyData.test.ts
+│   ├── errors.test.ts
 │   ├── regexPipeline.test.ts
 ```
