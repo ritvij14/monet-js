@@ -450,14 +450,87 @@
         "id": 32,
         "title": "Build Live Demo Website (Vite)",
         "description": "Build the live demo website using Vite, consuming the UMD bundle.",
-        "details": "Set up a new project directory for the demo site (e.g., `demo`). Use Vite to serve static HTML, CSS, and minimal vanilla JS. The JS should import and use the generated UMD bundle of `monet-js` to provide real-time parsing functionality.",
+        "details": "Set up a new project directory for the demo site (e.g., `demo`). Use Vite to serve static HTML, CSS, and minimal vanilla JS. The JS should import and use the generated UMD bundle of `monet-js` to provide real-time parsing functionality.\n<info added on 2025-07-01T09:29:55.720Z>\nClarification: The Vite demo should be an entirely separate project located in the `demo/` directory, with its own `package.json`, dependencies, and `vite.config.js`. The demo’s build/dev scripts must not run as part of the library’s main `build` or `prepare` steps. The root package remains focused solely on building the NPM package.\n\nImplementation adjustments:\n• All Vite config and dependencies live inside `demo/`.\n• Root `package.json` scripts only expose optional `dev:demo` and `build:demo` that delegate into `demo/` (e.g., `npm --prefix demo run dev`).\n• The existing library build/prepare flow remains unchanged.\n\nSubtasks 32.1–32.6 remain valid but implicitly operate within the isolated `demo/` project structure.\n</info added on 2025-07-01T09:29:55.720Z>",
         "testStrategy": "Run the Vite development server for the demo site. Open the site in a browser and verify that the `monet-js` library is loaded and the real-time parsing feature works as expected.",
         "priority": "medium",
         "dependencies": [
           28
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Initialize Vite project in demo directory",
+            "description": "Create a new Vite project inside the existing demo/ folder, configured for vanilla JS.",
+            "details": "1. Run `npm create vite@latest demo -- --template vanilla` in project root.\n2. Adjust Vite config/output paths if needed so assets build into demo/dist.\n3. Add script entries `dev:demo` and `build:demo` to package.json.\n4. Verify `npm run dev:demo` serves the demo site on localhost.",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 32
+          },
+          {
+            "id": 2,
+            "title": "Integrate monet-js UMD bundle",
+            "description": "Add the generated monet-js UMD script into the Vite demo project.",
+            "details": "1. Ensure the build step for monet-js UMD (Task 28) outputs `dist/umd/monet-js.min.js`.\n2. Copy or link the UMD file into demo/public (or use Vite static asset import).\n3. Include `<script src=\"/monet-js.min.js\"></script>` in `index.html` and verify `window.monetJs` exists.",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 32
+          },
+          {
+            "id": 3,
+            "title": "Implement Testing Area UI",
+            "description": "Add a textarea/input and results panel so users can paste text and view parsed monetary data.",
+            "details": "1. In `index.html`, create a `<textarea id=\"input\">` and a `<pre id=\"output\"></pre>`.\n2. Add a \"Parse\" button or use `input` event listener for real-time parsing.\n3. Basic styling: responsive layout, monospaced output block.",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 32
+          },
+          {
+            "id": 4,
+            "title": "Wire monet-js parsing logic",
+            "description": "Hook up the UI to call monet-js parse function and display structured results.",
+            "details": "1. In `main.js`, add event listener on textarea or button.\n2. Call `window.monetJs.parseMoney(text)`.\n3. Format returned object as JSON using `JSON.stringify(result,null,2)` and inject into `output` pre.\n4. Handle errors gracefully.",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 32
+          },
+          {
+            "id": 5,
+            "title": "Add styling and user experience polish",
+            "description": "Refine CSS and interactions for the demo site.",
+            "details": "1. Add basic CSS for layout, fonts, colors.\n2. Highlight parsed output (e.g., syntax highlighting via Prism.js optional).\n3. Ensure mobile responsiveness.\n4. Add footer with project link and version.",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 32
+          },
+          {
+            "id": 6,
+            "title": "Document build and deployment",
+            "description": "Write README/demo docs explaining how to build and run the demo site locally or deploy to GitHub Pages.",
+            "details": "1. Add section in root README or demo/README with commands `npm run build:demo` and `npm run dev:demo`.\n2. Provide instructions for GitHub Pages deployment via `vite build --base /monet/`.\n3. Include screenshot/gif of testing area in action.",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 32
+          },
+          {
+            "id": 7,
+            "title": "Upgrade demo to full Vite app with enhanced UI",
+            "description": "Convert static demo into a small Vite application with modular JS and polished UI.",
+            "details": "1. Move inline CSS into dedicated `style.css`, link it via <link>.\n2. Improve layout with flexbox, responsive design, and better typography/colors.\n3. Update `main.js` to parse on textarea input (debounced) and show results in real time; add error handling.\n4. Separate logic from markup for cleaner structure.\n5. Ensure zero external dependencies beyond Vite.",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 32
+          },
+          {
+            "id": 8,
+            "title": "Convert demo to Vite React app",
+            "description": "Rebuild demo using Vite + React for richer example.",
+            "details": "1. Add React, ReactDOM, and @vitejs/plugin-react as dependencies in demo/package.json.\n2. Update vite.config.js to use react plugin.\n3. Move UI into React components (App.jsx) with textarea, result panel.\n4. Render via main.jsx.\n5. Keep monet-js UMD bundle in public and access via window.monetJs.\n6. Style using existing CSS.\n7. Update README instructions.\n<info added on 2025-07-01T12:38:16.956Z>\n8. Import RegexPipeline from monet-js and use `new RegexPipeline().run()` instead of `parseMoney` (as `parseMoney` is not yet exported).\n</info added on 2025-07-01T12:38:16.956Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 32
+          }
+        ]
       },
       {
         "id": 33,
@@ -487,11 +560,24 @@
         ],
         "priority": "medium",
         "subtasks": []
+      },
+      {
+        "id": 35,
+        "title": "Build Production Demo Using Published NPM Package",
+        "description": "Create a production-ready demo that installs and uses the published monet-js package from npm.",
+        "details": "This task should be completed after all other features are implemented and the package is published to npm. The demo should install the monet-js package from npm rather than using local imports, ensuring proper dependency resolution and demonstrating real-world usage. This approach will solve the current ESM import issues and provide a genuine showcase of how users would integrate the library.\n\nSteps:\n1. Publish the monet-js package to npm (either public or as a scoped package)\n2. Update the demo project to install the package from npm\n3. Modify imports in the demo to use the npm package rather than local paths\n4. Update the vite.config.js to remove the local path aliases\n5. Test the demo to ensure it works correctly with the published package\n6. Document the process in the README",
+        "testStrategy": "Verify that the demo runs correctly with the published npm package. Ensure all features work as expected and that there are no dependency resolution issues.",
+        "status": "pending",
+        "dependencies": [
+          32
+        ],
+        "priority": "low",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-06-22T05:27:52.739Z",
-      "updated": "2025-07-01T08:47:51.893Z",
+      "updated": "2025-08-25T14:31:51.084Z",
       "description": "Tasks for master context"
     }
   }

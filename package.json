@@ -24,7 +24,9 @@
     "prepare": "npm run build",
     "size": "size-limit",
     "changeset": "changeset",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "dev:demo": "npm --prefix demo run dev",
+    "build:demo": "npm --prefix demo run build"
   },
   "keywords": [
     "money",
