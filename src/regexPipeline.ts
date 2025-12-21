@@ -94,6 +94,8 @@ export class RegexPipeline {
 // Default Step Implementations
 // ---------------------------------------------------------------------------
 import { getAllCurrencies, getCurrencyByCode } from "./currencyData";
+import { matchNumericWordCombo } from "./patterns/numericWordCombos";
+import { matchFractionalWordedNumber } from "./patterns/wordedNumbers";
 
 // ---------------------------------------------------------------------------
 // Currency helpers
@@ -285,16 +287,12 @@ const numericDetectionStep: PipelineStep = (input, ctx) => {
   const cleaned = input.replace(/,/g, "");
 
   // ---------------------------------------------------------------------
-  // 1) Numeric value with optional shorthand suffix (k, m, b)
+  // 1) Numeric-word combos (10k, 5m, 2b, 2bn)
   // ---------------------------------------------------------------------
-  const suffixMatch = /(?:\b|^)(\d+(?:\.\d+)?)([kKmMbB])(?:\b|$)/.exec(cleaned);
-  if (suffixMatch) {
-    const value = parseFloat(suffixMatch[1]);
-    const multiplier = SUFFIX_MULTIPLIER[suffixMatch[2].toLowerCase()];
-    if (!isNaN(value)) {
-      out.amount = value * multiplier;
-      return out;
-    }
+  const comboMatch = matchNumericWordCombo(cleaned);
+  if (comboMatch) {
+    out.amount = comboMatch.value;
+    return out;
   }
 
   // ---------------------------------------------------------------------
@@ -307,7 +305,16 @@ const numericDetectionStep: PipelineStep = (input, ctx) => {
   }
 
   // ---------------------------------------------------------------------
-  // 3) Worded numbers ("one hundred twenty", "two thousand")
+  // 3) Fractional worded numbers ("half", "three quarters", "two thirds")
+  // ---------------------------------------------------------------------
+  const fractionalMatch = matchFractionalWordedNumber(cleaned);
+  if (fractionalMatch) {
+    out.amount = fractionalMatch.value;
+    return out;
+  }
+
+  // ---------------------------------------------------------------------
+  // 4) Worded numbers ("one hundred twenty", "two thousand")
   // ---------------------------------------------------------------------
   const wordNumberRegex =
     /\b((?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion)(?:[\s-](?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion))*)\b/i;

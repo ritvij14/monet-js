@@ -128,7 +128,7 @@
           7,
           9
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -142,8 +142,54 @@
           7,
           9
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create regex pattern for numbers with separators",
+            "description": "Define regex pattern to match numbers with thousands separators (,) and decimal points (.)",
+            "details": "Pattern should handle: 1,000 | 1,234.56 | 1,234,567.89 | Handle edge cases like leading zeros, multiple decimals",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 11
+          },
+          {
+            "id": 2,
+            "title": "Implement parser function for numbers with separators",
+            "description": "Create parser that removes separators and converts to numeric value",
+            "details": "Strip commas, validate format, convert to number, handle invalid inputs",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 11
+          },
+          {
+            "id": 3,
+            "title": "Write unit tests for numbers with separators",
+            "description": "Create comprehensive test suite for the parser",
+            "details": "Test cases: '1,000', '1.23', '1,234,567.89', edge cases, invalid formats",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 11
+          },
+          {
+            "id": 4,
+            "title": "Integrate pattern into main parser pipeline",
+            "description": "Add the new pattern to the regex pipeline in index.ts",
+            "details": "Export pattern, add to pipeline, ensure proper ordering",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 11
+          },
+          {
+            "id": 5,
+            "title": "Run tests and verify implementation",
+            "description": "Execute test suite and validate all cases pass",
+            "details": "Run jest tests, fix any failures, ensure no regressions",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 11
+          }
+        ]
       },
       {
         "id": 12,
@@ -156,7 +202,7 @@
           7,
           8
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -170,7 +216,7 @@
           7,
           8
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -184,7 +230,7 @@
           7,
           9
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -198,8 +244,45 @@
           7,
           9
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define fractional word lexicon and normalization rules",
+            "description": "List supported fractional terms (e.g., half, quarter, three quarters, third/thirds) and map them to numeric values for monetary parsing. Clarify scope and assumptions.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 15
+          },
+          {
+            "id": 2,
+            "title": "Implement fractional worded number parser",
+            "description": "Add parser logic that converts supported fractional word patterns into numeric amounts and currency metadata, aligning with existing pattern/parser interfaces.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 15
+          },
+          {
+            "id": 3,
+            "title": "Integrate parser into pipeline",
+            "description": "Register the fractional worded number pattern/parser in the regex pipeline and ensure ordering doesn’t conflict with existing worded-number handling.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 15
+          },
+          {
+            "id": 4,
+            "title": "Write unit tests for fractional worded numbers",
+            "description": "Add fixtures covering phrases like 'half a dollar', 'quarter dollar', 'three quarters of a euro', verifying numeric conversion and currency handling.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 15
+          }
+        ]
       },
       {
         "id": 16,
@@ -212,7 +295,7 @@
           7,
           9
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -577,7 +660,7 @@
     ],
     "metadata": {
       "created": "2025-06-22T05:27:52.739Z",
-      "updated": "2025-08-25T14:31:51.084Z",
+      "updated": "2025-12-21T20:10:56.141Z",
       "description": "Tasks for master context"
     }
   }
