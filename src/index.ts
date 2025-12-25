@@ -5,6 +5,7 @@ export {
   getCurrencyByNumber,
 } from "./currencyData";
 export { MoneyParseError, ValueOverflowError } from "./errors";
+export { parseMoney } from "./parseMoney";
 export {
   AbbreviationParseResult,
   matchAbbreviation,

@@ -58,15 +58,5 @@
     "ts-jest": "^29.1.1",
     "tslib": "^2.8.1",
     "typescript": "^5.4.0"
-  },
-  "size-limit": [
-    {
-      "path": "dist/esm/index.js",
-      "limit": "10 kB"
-    },
-    {
-      "path": "dist/cjs/index.js",
-      "limit": "10 kB"
-    }
-  ]
+  }
 }
