@@ -309,22 +309,103 @@
           7,
           9
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
         "id": 18,
         "title": "Implement Parser for Contextual Phrases Pattern",
-        "description": "Implement the pattern parser for Contextual Phrases (e.g., 'a hundred dollars').",
-        "details": "Create a parser that handles numbers and currencies embedded within simple phrases, potentially including articles ('a', 'the').",
-        "testStrategy": "Write unit tests with strings like 'a hundred dollars', 'the fifty euros' to verify the parser extracts the core monetary expression.",
-        "priority": "medium",
+        "description": "Implement the pattern parser for Contextual Phrases (e.g., 'a hundred dollars') including compound major+minor currency expressions.",
+        "status": "done",
         "dependencies": [
           7,
           9
         ],
-        "status": "pending",
-        "subtasks": []
+        "priority": "medium",
+        "details": "Create a parser that handles numbers and currencies embedded within simple phrases, potentially including articles ('a', 'the'), and now also handles compound major+minor currency expressions (e.g., 'a dollar and 23 cents', 'five euros and fifty cents').",
+        "testStrategy": "Write unit tests with strings like 'a hundred dollars', 'the fifty euros', 'a dollar and 23 cents', 'five euros and fifty cents' to verify the parser extracts the core monetary expression, including major and minor units.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design contextual phrases parsing rules and data shapes",
+            "description": "Define input examples, expected outputs, and parser interface for contextual phrases (articles + number + currency).",
+            "status": "done",
+            "dependencies": [],
+            "details": "List target patterns (e.g., 'a hundred dollars', 'the fifty euros', 'one thousand yen'); clarify assumptions on article handling and ordering; update task notes if scope adjustments needed.",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement contextual phrase parser",
+            "description": "Code parser to extract amount and currency from phrases with articles and simple structure.",
+            "status": "done",
+            "dependencies": [],
+            "details": "Handle patterns like '<article?> <number/worded number> <currency name/code>'; normalize case/whitespace; return amount+currency; reuse existing number and currency helpers where possible.",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Integrate parser into pipeline",
+            "description": "Wire contextual phrase matching into regex/numeric pipeline with appropriate precedence.",
+            "status": "done",
+            "dependencies": [],
+            "details": "Add matching function and hook into regexPipeline step order; ensure no regressions with other patterns.",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Add unit tests for contextual phrases",
+            "description": "Write tests for parsing phrases like 'a hundred dollars', 'the fifty euros', 'one thousand yen'.",
+            "status": "done",
+            "dependencies": [],
+            "details": "Cover articles, numeric/worded amounts, case/whitespace handling, invalid inputs, and pipeline integration where applicable.",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Documentation and edge-case notes",
+            "description": "Document supported contextual phrase patterns and limitations.",
+            "status": "done",
+            "dependencies": [],
+            "details": "Update README or pattern docs with examples; note assumptions (articles optional, simple ordering, no complex grammar).",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Extend parser to handle major+minor currency expressions",
+            "description": "Modify the parser to recognize and extract amounts from phrases like 'a dollar and 23 cents'.",
+            "status": "done",
+            "dependencies": [
+              2
+            ],
+            "details": "Implement parsing logic for '<major currency> and <minor currency>' patterns. Ensure correct handling of different currencies and their minor units. Consider edge cases like missing major or minor units.",
+            "testStrategy": ""
+          },
+          {
+            "id": 7,
+            "title": "Update unit tests for major+minor currency expressions",
+            "description": "Add new unit tests to cover the parsing of major+minor currency expressions.",
+            "status": "done",
+            "dependencies": [
+              4,
+              6
+            ],
+            "details": "Include tests for various scenarios, such as 'a dollar and 23 cents', 'five euros and fifty cents', '10 pounds and 5 pence', and edge cases with missing major or minor units.",
+            "testStrategy": ""
+          },
+          {
+            "id": 8,
+            "title": "Update documentation with major+minor currency examples",
+            "description": "Expand the documentation to include examples and explanations of how the parser handles major+minor currency expressions.",
+            "status": "done",
+            "dependencies": [
+              5,
+              6
+            ],
+            "details": "Add examples to the README or pattern docs demonstrating the supported formats and limitations for major+minor currency parsing.",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 19,
@@ -656,11 +737,70 @@
         ],
         "priority": "low",
         "subtasks": []
+      },
+      {
+        "id": 36,
+        "title": "Optimize monet-js for Demo and Bundle Size",
+        "description": "Optimize monet-js for demo-ready one-call parsing with minimal bundle size. This includes lazy initialization, tree-shaking improvements, and updating demo usage to showcase the optimized library.",
+        "details": "1.  **Lazy Initialization:** Implement lazy initialization for non-core components and parsers. This will reduce the initial bundle size by deferring the loading of less frequently used features until they are actually needed.\n2.  **Tree-Shaking Analysis:** Analyze the current bundle using a tree-shaking analyzer (e.g., webpack-bundle-analyzer) to identify opportunities for further size reduction.  Focus on removing dead code and ensuring that only necessary modules are included in the final bundle.\n3.  **Code Splitting:** Explore code splitting strategies to further reduce the initial load time.  Consider splitting the bundle into smaller chunks based on functionality or usage patterns.\n4.  **Dependency Optimization:** Review and update dependencies to ensure they are the latest versions and that they are not contributing unnecessarily to the bundle size.  Consider replacing larger dependencies with smaller, more focused alternatives where appropriate.\n5.  **Demo Update:** Update the demo to showcase the optimized library and its one-call parsing capabilities.  Ensure the demo is easy to use and provides clear examples of how to use the library effectively.\n6.  **Documentation:** Update documentation to reflect the changes made during optimization, including any new APIs or usage patterns.",
+        "testStrategy": "1.  **Bundle Size Verification:** Measure the bundle size before and after optimization to ensure that the changes have resulted in a significant reduction in size.  Use tools like webpack-bundle-analyzer to compare the bundle contents.\n2.  **Performance Testing:** Conduct performance testing to ensure that the optimizations have not negatively impacted the parsing speed or overall performance of the library.  Focus on testing the one-call parsing functionality with a variety of inputs.\n3.  **Functional Testing:** Run existing unit tests to ensure that all existing functionality continues to work as expected after the optimizations.\n4.  **Demo Testing:** Thoroughly test the updated demo to ensure that it is easy to use, provides clear examples, and accurately showcases the optimized library.\n5.  **Tree-Shaking Verification:** Verify that tree-shaking is working correctly by inspecting the generated bundle and ensuring that unused code has been removed.",
+        "status": "pending",
+        "dependencies": [
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          19,
+          20
+        ],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Add one-call parseMoney API",
+            "description": "Expose a top-level parseMoney(text) that wraps RegexPipeline.default().run and returns structured output.",
+            "details": "Maintain default all-pattern coverage; keep RegexPipeline export for advanced use.",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 36
+          },
+          {
+            "id": 2,
+            "title": "Make heavy initializations lazy/memoized",
+            "description": "Defer currency name/code map construction and other heavy lookups until first call to reduce bundle impact.",
+            "details": "Ensure contextual phrases and regex pipeline build maps on demand; keep behavior identical.",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 36
+          },
+          {
+            "id": 3,
+            "title": "Centralize currency map building",
+            "description": "Build currency name/code maps once in a shared helper to avoid duplicate currency-codes pulls across modules.",
+            "details": "Ensure both regex pipeline and contextual phrases reuse the same lazy map builder to minimize bundle size.",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 36
+          },
+          {
+            "id": 4,
+            "title": "Add browser-friendly entry + demo import",
+            "description": "Expose a clear ESM entry (e.g., parseMoney) for Vite/React demo and update demo to consume it.",
+            "details": "Keep all patterns active by default; ensure demo import path uses published package entry and benefits from tree-shaking.",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 36
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-06-22T05:27:52.739Z",
-      "updated": "2025-12-21T20:10:56.141Z",
+      "updated": "2025-12-24T17:33:31.735Z",
       "description": "Tasks for master context"
     }
   }

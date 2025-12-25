@@ -94,7 +94,9 @@ export class RegexPipeline {
 // Default Step Implementations
 // ---------------------------------------------------------------------------
 import { getAllCurrencies, getCurrencyByCode } from "./currencyData";
+import { matchContextualPhrase } from "./patterns/contextualPhrases";
 import { matchNumericWordCombo } from "./patterns/numericWordCombos";
+import { matchSlangTerm } from "./patterns/slangTerms";
 import { matchFractionalWordedNumber } from "./patterns/wordedNumbers";
 
 // ---------------------------------------------------------------------------
@@ -296,7 +298,27 @@ const numericDetectionStep: PipelineStep = (input, ctx) => {
   }
 
   // ---------------------------------------------------------------------
-  // 2) Plain numeric (digits and decimals)
+  // 2) Slang terms ("buck", "quid", "fiver", "tenner")
+  // ---------------------------------------------------------------------
+  const slangMatch = matchSlangTerm(cleaned);
+  if (slangMatch) {
+    out.amount = slangMatch.value;
+    out.currency = out.currency ?? slangMatch.currency;
+    return out;
+  }
+
+  // ---------------------------------------------------------------------
+  // 3) Contextual phrases (articles + currency names/codes, optional minor units)
+  // ---------------------------------------------------------------------
+  const contextualMatch = matchContextualPhrase(cleaned);
+  if (contextualMatch) {
+    out.amount = contextualMatch.value;
+    out.currency = out.currency ?? contextualMatch.currency;
+    return out;
+  }
+
+  // ---------------------------------------------------------------------
+  // 4) Plain numeric (digits and decimals)
   // ---------------------------------------------------------------------
   const numMatch = /(?:\b|^)(\d+(?:\.\d+)?)(?:\b|$)/.exec(cleaned);
   if (numMatch) {
@@ -305,7 +327,7 @@ const numericDetectionStep: PipelineStep = (input, ctx) => {
   }
 
   // ---------------------------------------------------------------------
-  // 3) Fractional worded numbers ("half", "three quarters", "two thirds")
+  // 5) Fractional worded numbers ("half", "three quarters", "two thirds")
   // ---------------------------------------------------------------------
   const fractionalMatch = matchFractionalWordedNumber(cleaned);
   if (fractionalMatch) {
@@ -314,7 +336,7 @@ const numericDetectionStep: PipelineStep = (input, ctx) => {
   }
 
   // ---------------------------------------------------------------------
-  // 4) Worded numbers ("one hundred twenty", "two thousand")
+  // 6) Worded numbers ("one hundred twenty", "two thousand")
   // ---------------------------------------------------------------------
   const wordNumberRegex =
     /\b((?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion)(?:[\s-](?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion))*)\b/i;
